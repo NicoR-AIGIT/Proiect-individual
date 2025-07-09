@@ -116,7 +116,21 @@ def train_model(X_train, y_train, X_test, y_test):
         print(f"\nAu fost salvate {len(misclassified)} erori în fișierul '{output_path}'.")
     else:
         print("\n***************Nicio eroare de clasificare nu a fost găsită.*******************")
+ 
+    # Generare fișier CSV cu rezultatele detaliate
+    output_all_results_path = "rezultate_emailuri.csv"
+    with open(output_all_results_path, mode="w", encoding="utf-8", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["email", "categoria", "identificat_raspuns", "raspuns_propus"])
+        for i in range(len(X_test_list)):
+            email_text = X_test_list[i]
+            predicted_class = y_pred[i]
+            raspuns = responses.get(predicted_class)
+            identificat = "da" if raspuns else "nu"
+            raspuns_final = raspuns if raspuns else "Răspunsul nu este disponibil."
+            writer.writerow([email_text, predicted_class, identificat, raspuns_final])
 
+    print(f"\nFișierul complet cu toate emailurile a fost salvat în '{output_all_results_path}'.")
 
      # Plotarea unui grafic pentru scorurile de validare
     plt.figure(figsize=(10, 6))
